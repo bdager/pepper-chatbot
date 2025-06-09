@@ -1,8 +1,9 @@
 # Pepper Chatbot 🤖
 
+![Pepper robot](assets/pepper_2.png?raw=true)
+
 This project enables natural language interaction with a **Pepper robot** using language models such as GPT or LLaMA. The chatbot pipeline supports speech recognition, question answering, and text-to-speech, and can run using the PC microphone or Pepper’s built-in microphone.
 
----
 
 ## Installation
 
@@ -60,9 +61,9 @@ Set your API key as an environment variable (e.g., for OpenAI GPT models):
 export OPENAI_API_KEY="your_key_here"
 ```
 
----
 
-## 🚀 How to Use
+
+## How to Use 🚀 
 
 Once everything is set up, you can launch the main program using:
 
