@@ -1,13 +1,102 @@
+# Pepper Chatbot 🤖
 
-You need to enter the __Secure-1PSID(named token in the code )and __Secure-1PSIDTS(start with: "sidts-...") cookies in the main file(at the end of the code). You'll find them by going to Bard in a web browser (Chrome, Firefox, etc.)connect with your google account, opening the console (f12), then looking for the cookies (on Chrome, go to "application") and they'll be there (note that the __Secure-1PSIDTS changes every time you close the browser).
+This project enables natural language interaction with a **Pepper robot** using language models such as GPT or LLaMA. The chatbot pipeline supports speech recognition, question answering, and text-to-speech, and can run using the PC microphone or Pepper’s built-in microphone.
 
-Then, in the terminal you need to execute the command export PYTHONPATH=${PYTHONPATH}:<path_to_the_file>/pynaoqi-python2.7-2.5.7.1-linux64/lib/python2.7/site-packages
+---
 
-Besides execute python3 mainb.py and then choose your language.
+## Installation
 
-If you have the message error : Exception: "SNlM0e value not found. Double-check __Secure-1PSID value or pass it as token='xxxxx'."
-Refresh the Bard google page and retake the __Secure-1PSIDTS (normally the __Secure-1PSID doesn't change).
+This project requires both Python 3.10 and Python 2.7:
+
+- **Python 3.10** is used for the main logic and language model interaction.
+- **Python 2.7** is required for communication with Pepper using [pynaoqi](https://developer.softbankrobotics.com/pepper-naoqi-25/naoqi-developer-guide), which only supports Python 2.7.
+
+### 1. System Dependencies
+
+Install the following system libraries:
+
+```bash
+sudo apt-get update
+sudo apt-get install portaudio19-dev
+sudo apt-get install libpython2.7
+```
+
+To avoid exporting the dynamic library path every time:
+
+```bash
+export LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu:$LD_LIBRARY_PATH
+```
+
+### 2. Python Dependencies
+
+Install Python 3.10 dependencies:
+
+```bash
+pip install -r requirements.txt
+```
+
+### 3. pynaoqi Module
+
+Make sure you have downloaded the `pynaoqi` module. In this repository, it is already included in the main directory tree.
 
 
+## Running the Chatbot
 
-Here is a link to the BARD gitlab : https://github.com/dsdanielpark/Bard-API
+### 1. Configure `pynaoqi`
+
+Before running the chatbot, ensure the `pynaoqi` module is included in your environment:
+
+```bash
+export PYTHONPATH=${PYTHONPATH}:/path/to/pynaoqi-python2.7-2.5.7.1-linux64/lib/python2.7/site-packages
+```
+
+> Replace `/path/to/` with the actual directory where you extracted the `pynaoqi` module.
+
+### 2. Configure GPT API Key
+
+Set your API key as an environment variable (e.g., for OpenAI GPT models):
+
+```bash
+export OPENAI_API_KEY="your_key_here"
+```
+
+---
+
+## 🚀 How to Use
+
+Once everything is set up, you can launch the main program using:
+
+```bash
+python main_gpt.py --IP <robot-ip-to-connect>
+```
+
+By default, the PC microphone is used. To use Pepper’s built-in microphone, run:
+
+```bash
+python main_gpt.py --use_pepper_mic=True
+```
+
+You will then be asked to specify the interaction language:
+
+```bash
+Please enter the desired language code (example 'es' for Spanish, 'en' for English):
+```
+
+---
+
+## Interaction Flow
+
+1. Touch Pepper's head to indicate you want to ask a question.
+2. Pepper will prompt you when it's ready to listen.
+3. Ask your question using voice.
+4. The system processes your voice input, generates a response using the selected model, and makes Pepper speak the answer.
+
+---
+
+## Notes
+
+- This system supports real-time interaction and requires both network access (for API calls) and local audio input/output.
+- Ensure that Pepper is connected and reachable at the specified IP address (e.g., `192.168.x.x`).
+- Log messages from `qimessaging` may appear at startup — this is expected behavior from the Pepper communication stack.
+
+---

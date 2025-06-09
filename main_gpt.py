@@ -29,7 +29,7 @@ def call_python_script(action, args_dict=None):
     Function used to run a script in another python version. We need this to use Naoqi and work with
     Pepper robot, which only works in Python 2.7 (https://developer.softbankrobotics.com/pepper-naoqi-25/naoqi-developer-guide/getting-started/downloading-installing-softbank-robotics)
     '''
-    command = ["python2.7", "pepper_interact_2.py", "--action", action]
+    command = ["python2.7", "pepper_interact.py", "--action", action]
     if args_dict:
         for key, value in args_dict.items():
             command.append(f"--{key}")

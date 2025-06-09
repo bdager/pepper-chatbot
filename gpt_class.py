@@ -25,22 +25,13 @@ class GPTDescriptor:
         self.max_tokens = max_tokens
         self.top_p = top_p
         
-        
-    # def encode_image_base64(self, image):
-    #     """Function to encode the image as base64"""
-    #     _, buffer = cv2.imencode('.jpg', image)
-    #     return base64.b64encode(buffer).decode("utf-8")    
-    
-    
     def generate_answer(self, user_query, test=False):
         """Generate an answer using the GPT model."""
         if test:
             return {
                 "test": "test response"
             }
-
-        # img_b64_str = self.encode_image_base64(image)
-        
+       
         user_inputs = [
             {"type": "text", "text": user_query},            
         ]

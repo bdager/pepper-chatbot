@@ -1,6 +1,0 @@
-openai
-SpeechRecognition
-scp
-paramiko
-pyaudio
-python-dotenv
