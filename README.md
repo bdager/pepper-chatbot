@@ -14,7 +14,7 @@ This project requires both Python 3.10 and Python 2.7:
 
 ### 1. System Dependencies
 
-Install the following system libraries:
+Install the following system libraries (linux system):
 
 ```bash
 sudo apt-get update

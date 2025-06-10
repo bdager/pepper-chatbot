@@ -21,8 +21,10 @@ import paramiko
 import scp
 import random
 import argparse
+import threading
 from gpt_class import GPTDescriptor
-
+import time
+ 
 
 def call_python_script(action, args_dict=None):
     '''
@@ -35,6 +37,7 @@ def call_python_script(action, args_dict=None):
             command.append(f"--{key}")
             command.append(str(value))
     subprocess.call(command)
+    
 
 def createSSHClient(server, port, user, password):
     client = paramiko.SSHClient()
@@ -43,19 +46,31 @@ def createSSHClient(server, port, user, password):
     client.connect(server, port, user, password, look_for_keys=False, allow_agent=False)
     return client
 
+
+def countdown(seconds):
+    for i in range(seconds, 0, -1):
+        print(f"⏳ Time left: {i:2d} seconds", end="\r")
+        time.sleep(1)
+    print("\n⏹️ Time's up!")
+
+
 def main(gpt_model, args):
     recognizer = sr.Recognizer()
     os.system('clear')
     
     use_pepper = args.usePepper
-    IP = args.IP    
+    IP = args.IP  
+    recording_time = args.recording_time # in seconds
+    num_of_words = args.num_of_words  
 
     sentence = "Toca mi cabeza para hacerme una pregunta"
     text_robot = sentence
     print(sentence)     
     language = 'Spanish' #Spanish, 'en': English
     call_python_script("speak", {"sentence": text_robot, "language": language})
-
+    
+    waiting_messages = [["Estoy pensando"], ["Un momento"],["espere un momento"]]
+    
     try:
         while True:
             # Wait for pepper to sense touch
@@ -63,11 +78,10 @@ def main(gpt_model, args):
             # Open microphone and wait for the question            
             if use_pepper:
                 print('Pepper is listening to you!')        
-                call_python_script("listen", {"listen_time": 10})
+                call_python_script("listen", {"listen_time": recording_time})
                 print("Pepper has stopped listening.")
                 print('Copying audio file...')
-                messages = [["Estoy pensando"], ["Un momento"],["espere un momento"]]
-                call_python_script("speak", {"sentence": random.choice(messages)[0], "language": language})
+                call_python_script("speak", {"sentence": random.choice(waiting_messages)[0], "language": language})
                 ssh = createSSHClient(IP, 22, 'nao', 'nao')
                 scpClient = scp.SCPClient(ssh.get_transport())
                 scpClient.get('/home/nao/test.wav', os.getcwd() + '/recording.wav')
@@ -77,11 +91,18 @@ def main(gpt_model, args):
                     audio = recognizer.listen(source)
             else:
                 with sr.Microphone() as source:
-                    print("Listening...")
-                    audio = recognizer.listen(source, phrase_time_limit=10)
-                    print("Stop listening")
-                messages = [["Estoy pensando"], ["Un momento"],["espere un momento"]]
-                call_python_script("speak", {"sentence": random.choice(messages)[0], "language": language})        
+                    print(f"🎙️ Listening... You have {recording_time} seconds to speak")
+                    
+                    # Start countdown in background
+                    countdown_thread = threading.Thread(target=countdown, args=(recording_time,))
+                    countdown_thread.start()
+                    
+                    start_time = time.time()
+                    # Start listening (in background) and show countdown simultaneously
+                    audio = recognizer.listen(source, phrase_time_limit=recording_time)    
+                    elapsed_time = time.time() - start_time                             
+                    print("⏹️ Stop listening. Recording time was: {:.2f} seconds".format(elapsed_time))
+                call_python_script("speak", {"sentence": random.choice(waiting_messages)[0], "language": language})        
 
             try:
                 print('Translating...')
@@ -91,10 +112,12 @@ def main(gpt_model, args):
                 print(translation)
             except sr.UnknownValueError:
                 print("Sorry, I didn't understand you")
+                message_error = "No pude entenderte, lo siento"
+                call_python_script("speak", {"sentence": message_error, "language": language})
+                continue 
             except sr.RequestError as e:
                 print("Could not request results from Google Speech Recognition service; {0}".format(e))
 
-            num_of_words = 30
             prompt = "Por favor, responde a la siguiente pregunta con una sola opción utilizando menos de " + str(num_of_words) + " palabras: "
             text_question = prompt + " '" + translation + "?' "
             print(text_question)
@@ -120,6 +143,10 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--use_pepper_mic", dest="usePepper", type=bool, default=False, required=False)
     parser.add_argument("--IP", type=str, default="192.168.1.82")
+    parser.add_argument("--port", type=int, default=9559, required=False)
+    parser.add_argument("--recording_time", type=int, default=6, required=False,
+                        help="Time in seconds to record the question")
+    parser.add_argument("--num_of_words", type=int, default=30, required=False)
     args = parser.parse_args()
     gpt_model = GPTDescriptor()    
     main(gpt_model, args)

@@ -9,9 +9,9 @@ from naoqi import ALProxy
 import time
 
 
-def speak(sentence, language, IP="192.168.1.82"):
+def speak(sentence, language, IP="192.168.1.82", port=9559):
     print("I am in speak function")
-    tts = ALProxy("ALTextToSpeech", IP, 9559)
+    tts = ALProxy("ALTextToSpeech", IP, port)
     # Select user-selected language
     tts.setLanguage(str(language))
     full_string = "\\style=didactic\\" + str(sentence)
@@ -21,8 +21,8 @@ def speak(sentence, language, IP="192.168.1.82"):
     for segment in full_string.split('.'):
         tts.say(segment + "\\wait=10\\")
 
-def listen(listen_time = 8, IP="192.168.1.82"):
-    audioRecorder = ALProxy("ALAudioRecorder", IP, 9559)
+def listen(listen_time = 8, IP="192.168.1.82", port=9559):
+    audioRecorder = ALProxy("ALAudioRecorder", IP, port)
     audioRecorder.stopMicrophonesRecording()
     # Configure the channels that need to be recorded
     channels = [0, 0, 1, 0]  # Front mic only [Left, Right, Front, Rear]
@@ -33,8 +33,8 @@ def listen(listen_time = 8, IP="192.168.1.82"):
     audioRecorder.stopMicrophonesRecording()
     print("Record finished")
 
-def wait_touch(language, IP="192.168.1.82"):
-    touchSensors = ALProxy("ALTouch", IP, 9559)
+def wait_touch(language, IP="192.168.1.82", port=9559):
+    touchSensors = ALProxy("ALTouch", IP, port)
     touched = False
     while not touched:
         status = touchSensors.getStatus()
@@ -48,8 +48,8 @@ def wait_touch(language, IP="192.168.1.82"):
             else:
                 speak("Okay you can ask me a question", language)
 
-def switch_awareness(enable='Disable', IP="192.168.1.82"):
-    awareness = ALProxy("ALBasicAwareness", IP, 9559)
+def switch_awareness(enable='Disable', IP="192.168.1.82", port=9559):
+    awareness = ALProxy("ALBasicAwareness", IP, port)
     if enable == 'Enable':
         awareness.setEnabled(True)
         awareness.setStimulusDetectionEnabled('Touch', True)
@@ -65,13 +65,14 @@ if __name__ == "__main__":
     parser.add_argument("--language", type=str, default="Spanish")
     parser.add_argument("--listen_time", type=int, default=8)
     parser.add_argument("--IP", type=str, default="192.168.1.82")
+    parser.add_argument("--port", type=int, default=9559)
     args = parser.parse_args()
 
     if args.action == "speak":
-        speak(args.sentence, args.language, args.IP)
+        speak(args.sentence, args.language, args.IP, args.port)
     elif args.action == "listen":
-        listen(args.listen_time, args.IP)
+        listen(args.listen_time, args.IP, args.port)
     elif args.action == "wait_touch":
-        wait_touch(args.language, args.IP)
+        wait_touch(args.language, args.IP, args.port)
     elif args.action == "switch_awareness":
-        switch_awareness(args.sentence, args.IP)
+        switch_awareness(args.sentence, args.IP, args.port)
