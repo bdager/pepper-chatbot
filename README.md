@@ -83,7 +83,7 @@ You will then be asked to specify the interaction language:
 Please enter the desired language code (example 'es' for Spanish, 'en' for English):
 ```
 
----
+
 
 ## Interaction Flow
 
@@ -92,7 +92,7 @@ Please enter the desired language code (example 'es' for Spanish, 'en' for Engli
 3. Ask your question using voice.
 4. The system processes your voice input, generates a response using the selected model, and makes Pepper speak the answer.
 
----
+
 
 ## Notes
 
@@ -102,6 +102,8 @@ Please enter the desired language code (example 'es' for Spanish, 'en' for Engli
 
 ## Extras
 
-benedetti.py codes allows to interact with Pepper to say poems. You have 4 main words to choose and say to Pepper in order to activate it saying one of the poems.
+ 🎙️ benedetti.py: Reciting Poetry with Pepper
+ 
 
----
+The benedetti.py script allows you to interact with the Pepper robot by voice and have it recite poems by Mario Benedetti using expressive speech and gestures. ([README_benedetti](README_benedetti.md))
+
