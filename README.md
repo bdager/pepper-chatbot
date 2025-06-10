@@ -100,4 +100,8 @@ Please enter the desired language code (example 'es' for Spanish, 'en' for Engli
 - Ensure that Pepper is connected and reachable at the specified IP address (e.g., `192.168.x.x`).
 - Log messages from `qimessaging` may appear at startup — this is expected behavior from the Pepper communication stack.
 
+## Extras
+
+benedetti.py codes allows to interact with Pepper to say poems. You have 4 main words to choose and say to Pepper in order to activate it saying one of the poems.
+
 ---
