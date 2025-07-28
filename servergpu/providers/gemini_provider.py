@@ -18,7 +18,7 @@ class GeminiProvider(BaseProvider):
             raise ValueError("GEMINI_API_KEY environment variable is required")
         
         self.client = genai.Client(api_key=self.api_key)
-        self.default_model = "gemini-2.5-flash-lite-preview-06-17"
+        self.default_model = "gemini-2.5-flash-lite"
     
     def generate_response(self, prompt: str, system_prompt: str = "", model: str = None, **kwargs) -> str:
         """
