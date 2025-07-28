@@ -112,6 +112,8 @@ class PepperInteractionHandler:
             # Pausar ASR para cambiar vocabulario
             self.asr.pause(True)
             
+            self.asr.setLanguage("English")
+            self.asr.setLanguage("Spanish")
             # Crear vocabulario expandido (incluir variaciones)
             vocabulary = []
             for response in possible_responses:
