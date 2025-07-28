@@ -24,21 +24,16 @@ class OpenAIProvider(BaseProvider):
             return {
                 "test": "test response"
             }
-       
-        user_inputs = [
-            {"type": "text", "text": prompt},            
-        ]
 
         messages = [
             {"role": "system", "content": system_prompt},
-            {"role": "user", "content": user_inputs}
+            {"role": "user", "content": prompt}
         ]
 
         try:
             response = self.client.chat.completions.create(
                 model=self.model,
                 messages=messages,
-                response_format={"type": "json_object"},
                 temperature=self.temperature, # controls randomness
                 max_completion_tokens=self.max_tokens, # controls response length)
                 top_p=self.top_p, # controls diversity, adjusts probability distribution
@@ -46,8 +41,9 @@ class OpenAIProvider(BaseProvider):
                 presence_penalty=0, # affect repetition                
             )
 
-            chatgpt_response_json = response.choices[0].message.content.strip()
-            return json.loads(chatgpt_response_json)
+            message = response.choices[0].message
+
+            return message.content
 
         except Exception as e:
             print(f"Ha ocurrido un error: {str(e)}")
