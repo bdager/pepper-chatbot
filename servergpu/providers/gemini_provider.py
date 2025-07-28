@@ -66,7 +66,7 @@ class GeminiProvider(BaseProvider):
             if not response or not response.text:
                 return "Error: No se pudo generar una respuesta"
             
-            return self.clean_response(response.text)
+            return response.text
             
         except Exception as e:
             print(f"Error al generar respuesta con Gemini: {e}")

@@ -30,23 +30,4 @@ class BaseProvider(ABC):
         Raises:
             Exception: If there's an error generating the response
         """
-        pass
-    
-    
-    def clean_response(self, response: str) -> str:
-        """
-        Clean and normalize the response text.
-        This method can be overridden by specific providers if needed.
-        
-        Args:
-            response (str): Raw response from the AI
-            
-        Returns:
-            str: Cleaned response
-        """
-        if not response or response.strip() == '':
-            return "Puedes repetir la pregunta"
-        
-        # Remove accents for text-to-speech compatibility
-        result = response.replace('á', 'a').replace('é', 'e').replace('í', 'i').replace('ó', 'o').replace('ú', 'u').replace('ñ', 'ny')
-        return result.strip()
+        raise NotImplementedError("This method must be implemented by subclasses.")
