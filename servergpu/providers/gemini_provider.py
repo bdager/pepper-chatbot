@@ -11,14 +11,11 @@ class GeminiProvider(BaseProvider):
     Gemini AI provider implementation.
     """
     
-    def __init__(self):
+    def __init__(self, model="gemini-2.5-flash-lite"):
         super().__init__()
-        self.api_key = os.environ.get("GEMINI_API_KEY")
-        if not self.api_key:
-            raise ValueError("GEMINI_API_KEY environment variable is required")
-        
+        self.api_key = os.environ.get("GEMINI_API_KEY")        
         self.client = genai.Client(api_key=self.api_key)
-        self.default_model = "gemini-2.5-flash-lite"
+        self.default_model = model
     
     def generate_response(self, prompt: str, system_prompt: str = "", model: str = None, **kwargs) -> str:
         """

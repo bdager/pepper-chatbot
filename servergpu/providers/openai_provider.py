@@ -8,12 +8,13 @@ from .base_provider import BaseProvider
 load_dotenv()
 
 class OpenAIProvider(BaseProvider):
-    def __init__(self):
+    def __init__(self, model="gpt-4.1", max_tokens=300, temperature=0, top_p=0.2):
         super().__init__()
-        self.model = "gpt-4.1"
-        self.max_tokens = 300
-        self.temperature = 0
-        self.top_p = 0.2
+        
+        self.model = model
+        self.max_tokens = max_tokens
+        self.temperature = temperature
+        self.top_p = top_p
         
         self.client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
         

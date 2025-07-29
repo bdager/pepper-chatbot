@@ -7,7 +7,7 @@ Programa que procesa un archivo de audio, lo convierte a texto y llama a un mode
 '''
 
 
-def procesar_archivo(archivo, provider, personalidad):
+def procesar_archivo(archivo, provider, personalidad, word_limit=40):
     """
     Procesa un archivo de audio y genera una respuesta usando el provider y personalidad especificados.
     
@@ -34,7 +34,7 @@ def procesar_archivo(archivo, provider, personalidad):
         return transcription
     
     # Generar la respuesta de la IA
-    return generar_respuesta_ai(transcription, provider, personalidad)
+    return generar_respuesta_ai(transcription, provider, personalidad, word_limit)
 
 def transcribir_audio(archivo, language_code='es-ES'):
     """
@@ -69,7 +69,7 @@ def transcribir_audio(archivo, language_code='es-ES'):
         print(f"Error inesperado durante la transcripción: {e}")
         return "Error inesperado durante el procesamiento de audio"
 
-def generar_respuesta_ai(pregunta, provider_name, personalidad_id):
+def generar_respuesta_ai(pregunta, provider_name, personalidad_id, word_limit=40):
     """
     Genera una respuesta usando el provider y personalidad especificados.
     
@@ -99,7 +99,7 @@ def generar_respuesta_ai(pregunta, provider_name, personalidad_id):
         print(f"Usando personalidad: {personality_name}")
         
         # Preparar el prompt
-        prompt_prefix = "Por favor, responde a la siguiente pregunta usando menos de 40 palabras: "
+        prompt_prefix = f"Por favor, responde a la siguiente pregunta usando menos de {word_limit} palabras: "
         full_prompt = f"{prompt_prefix}'{pregunta}'"
         print(f"Prompt: {full_prompt}")
         
