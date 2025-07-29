@@ -4,6 +4,7 @@ from BaseHTTPServer import HTTPServer, BaseHTTPRequestHandler
 import subprocess
 import os
 import urlparse
+import argparse
 
 """
 Servidor HTTP simple para ejecutar un script de Python en el robot Pepper haciendo una petición GET a un endpoint específico.
@@ -80,7 +81,12 @@ class RequestHandler(BaseHTTPRequestHandler):
             self.wfile.write("Not Found: {}".format(path))
 
 if __name__ == '__main__':
-    port = 8080
-    httpd = HTTPServer(('0.0.0.0', port), RequestHandler)
-    print("Servidor escuchando en http://localhost:{}".format(port))
+
+    parser = argparse.ArgumentParser(description="Server para ejecutar un script")
+    parser.add_argument("--port", type=int, default=8080, required=False, help="Puerto en el que escuchará el servidor (por defecto: 8080)")
+    parser.add_argument("--IP", type=str, default="0.0.0.0", required=False, help="IP en la que escuchará el servidor (por defecto: 0.0.0.0)")
+    args = parser.parse_args()
+
+    httpd = HTTPServer((args.IP, args.port), RequestHandler)
+    print("Servidor escuchando en http://{}:{}".format(args.IP, args.port))
     httpd.serve_forever()

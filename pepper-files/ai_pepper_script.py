@@ -42,7 +42,7 @@ def call_python_script(action, args_dict=None):
             command.append(str(value))
     subprocess.call(command)
 
-def call_AI_model(provider, ip, port, personalidad=4):
+def call_AI_model(provider, ip, port, personalidad=4, word_limit=40):
 
     # El endpoint al que queremos llamar
     url = "http://" + ip + ":" + port + "/procesar_recibir_respuesta"
@@ -54,6 +54,7 @@ def call_AI_model(provider, ip, port, personalidad=4):
         payload = {
             "provider": provider,  # Puede ser 'gemini', 'openai'...
             "personalidad": personalidad,  # Puedes ajustar esto según tus necesidades
+            "word_limit": word_limit
         }
 
         # Hacemos la petición GET
@@ -96,7 +97,7 @@ def mandarArchivo(archivo, ip):
         'scp', 
         '-o', 'StrictHostKeyChecking=no',  # Evitar verificación de host
         archivo,
-        '{}@{}:/home/pepper/server-pepper-gpt/servergpu'.format(user, ip)
+        '{}@{}:/home/pepper/pepper-chatbot/servergpu'.format(user, ip)
     ]
     
     try:
@@ -129,7 +130,7 @@ def preguntar_personalidad():
     return ask_pepper_question(pregunta, respuestas)
 
 
-def main(server_ip, server_port, recording_time, provider):
+def main(server_ip, server_port, recording_time, provider, word_limit):
     os.system('clear')
     
     asking = True
@@ -175,7 +176,7 @@ def main(server_ip, server_port, recording_time, provider):
             print('Mandamos archivo al servidor remoto.')
             mandarArchivo(createdFile, server_ip)
             print('Llamamos al modelo AI.')
-            response = call_AI_model(provider, server_ip, server_port, personalidad=valor_personalidad)
+            response = call_AI_model(provider, server_ip, server_port, personalidad=valor_personalidad, word_limit=word_limit)
             print("Respuesta del modelo AI: ", response)
 
             if response == '':
@@ -204,16 +205,12 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description="Script de control para la interacción con Pepper AI")
 
-    parser.add_argument("--use_pepper_mic", dest="usePepper", type=bool, default=True, required=False, help="Usar el micrófono de Pepper (por defecto: True)")
-    parser.add_argument("--IP", type=str, default="127.0.0.1", required=False, help="Dirección IP del robot Pepper (por defecto: localhost)")
-    parser.add_argument("--port", type=int, default=9559, required=False, help="Puerto para el robot Pepper (por defecto: 9559)")
     parser.add_argument("--recording_time", type=int, default=6, required=False, help="Tiempo en segundos para grabar la pregunta (por defecto: 6)")
-    parser.add_argument("--num_of_words", type=int, default=30, required=False, help="Número máximo de palabras a procesar (por defecto: 30)")
-    parser.add_argument("--model", type=str, default="gpt-3.5-turbo", required=False, help="Modelo a utilizar para el bot de preguntas y respuestas (por defecto: gpt-3.5-turbo)")
+    parser.add_argument("--num_of_words", type=int, default=40, required=False, help="Número máximo de palabras a procesar (por defecto: 40)")
     parser.add_argument("--provider", type=str, default="none", required=False, help="Proveedor a utilizar para el bot de preguntas y respuestas (por defecto: gemini)")
     parser.add_argument("--serverIP", type=str, required=True, help="Dirección IP del servidor donde está alojado el modelo de IA")
     parser.add_argument("--serverPort", type=str, default="5000", required=True, help="Puerto del servidor donde está alojado el modelo de IA (por defecto: 5000)")
     
     args = parser.parse_args()
 
-    main(args.serverIP, args.serverPort, args.recording_time, args.provider)
+    main(args.serverIP, args.serverPort, args.recording_time, args.provider, args.num_of_words)
