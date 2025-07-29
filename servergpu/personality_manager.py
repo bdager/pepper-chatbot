@@ -1,6 +1,6 @@
 import json
 import os
-from typing import Dict, Optional
+from typing import Dict
 
 class PersonalityManager:
     """
@@ -23,7 +23,7 @@ class PersonalityManager:
             # Error al cargar las personalidades
             raise FileNotFoundError(f"El archivo de personalidades {self.personalities_file} no existe")
     
-    def get_personality(self, personality_id: str) -> Optional[Dict]:
+    def get_personality(self, personality_id: str) -> tuple[any, any]:
         """
         Obtiene la configuración de la personalidad por ID.
         
@@ -31,7 +31,7 @@ class PersonalityManager:
             personality_id (str): ID de la personalidad
             
         Returns:
-            Optional[Dict]: Configuración de la personalidad (name, system_prompt) o (None, None) si no se encuentra
+            tuple[any, any]: Configuración de la personalidad (name, system_prompt) o (None, None) si no se encuentra
         """
         return self._personalities.get(str(personality_id), (None,None))
     

@@ -34,6 +34,7 @@ def llamada():
     provider = request.args.get("provider")
     personalidad = request.args.get("personalidad")
     archivo = request.args.get("archivo", "test.wav")  # Default to test.wav
+    word_limit = request.args.get("word_limit", 40)  # Default to 40 words
     
     # Validate required parameters
     if not provider:
@@ -43,7 +44,7 @@ def llamada():
         personalidad = "4"  # Default personality
     
     try:
-        respuesta = procesar_archivo(archivo, provider, personalidad)
+        respuesta = procesar_archivo(archivo, provider, personalidad, word_limit)
         return respuesta
     except Exception as e:
         return f"Error interno del servidor: {str(e)}", 500
