@@ -30,7 +30,7 @@ def procesar_archivo(archivo, provider, personalidad, word_limit=40):
     
     # Transcribir audio a texto
     transcription = transcribir_audio(archivo, language_code)
-    if transcription.startswith("Error:") or transcription.startswith("No pude"):
+    if transcription.startswith("Error") or transcription.startswith("No pude"):
         return transcription
     
     # Generar la respuesta de la IA
