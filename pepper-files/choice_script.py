@@ -8,6 +8,7 @@ Requiere Python 2.7 y NAOqi SDK
 from __future__ import print_function
 from naoqi import ALProxy
 import time
+import traceback
 
 # Clave de ALMemory para marcar vocab inicializado
 VOCAB_FLAG = "MyApp/VocabInitialized"
@@ -95,14 +96,19 @@ class PepperInteractionHandler:
                 
         except Exception as e:
             print("Error durante la interacción: {}".format(e))
-            print(e)
+            print("Detalles del error:")
+            traceback.print_exc()
             return (None, None)
         finally:
-            # Asegurar que se detenga el reconocimiento
+            # Asegurar que se detenga el reconocimiento y se limpie el vocabulario
             try:
+                print("Deteniendo reconocimiento de voz y limpiando vocabulario.")
                 self.asr.unsubscribe("Dynamic_ASR")
-            except:
-                pass
+            except Exception as e:
+                print("Error al restaurar el estado del reconocimiento de voz.")
+                print(e)
+                print("Detalles del error:")
+                traceback.print_exc()
 
     def _setup_vocabulary(self, possible_responses):
         """
@@ -112,8 +118,10 @@ class PepperInteractionHandler:
             # Pausar ASR para cambiar vocabulario
             self.asr.pause(True)
             
+            # Al cambiar el idioma, se reinicia el vocabulario por defecto.
             self.asr.setLanguage("English")
             self.asr.setLanguage("Spanish")
+            
             # Crear vocabulario expandido (incluir variaciones)
             vocabulary = []
             for response in possible_responses:
@@ -134,7 +142,8 @@ class PepperInteractionHandler:
         except Exception as e:
             print("Error configurando vocabulario")
             print(e)
-            raise e
+            print("Detalles del error:")
+            traceback.print_exc()
 
     def _wait_for_response(self, timeout, confidence_threshold):
         """
@@ -216,7 +225,7 @@ if __name__ == "__main__":
 
     print("\n=== Ejemplo 2: Múltiples opciones ===")
     # Ejemplo 2: Pregunta de múltiples opciones con diferentes valores
-    question2 = "¿Qué te gustaría hacer? Puedes decir: bailar, cantar o hablar."
+    question2 = "¿Qué quieres hacer?"
     actions2 = {
         "bailar": {"text": "¡Perfecto! Vamos a bailar juntos.", "value": 1},
         "cantar": {"text": "¡Qué divertido! Me encanta cantar.", "value": 2},
@@ -253,4 +262,3 @@ if __name__ == "__main__":
     if text:
         handler = PepperInteractionHandler()
         handler.tts.say(text)
-    

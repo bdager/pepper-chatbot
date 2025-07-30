@@ -4,10 +4,10 @@ Esta carpeta contiene los scripts que deben ejecutarse directamente en el robot 
 
 ## 📁 Archivos incluidos
 
-- **`server.py`** - Servidor HTTP que se ejecuta en el robot Pepper
-- **`ai_pepper_script.py`** - Script principal de interacción con IA
-- **`choice_script.py`** - Script para selección según parámetros
-- **`pepper_interact.py`** - Funciones de interacción con el robot
+-   **`server.py`** - Servidor HTTP que se ejecuta en el robot Pepper
+-   **`ai_pepper_script.py`** - Script principal de interacción con IA
+-   **`choice_script.py`** - Script para selección según parámetros
+-   **`pepper_interact.py`** - Funciones de interacción con el robot
 
 ## 🚀 Instalación en Pepper
 
@@ -20,15 +20,17 @@ Todos estos archivos deben copiarse al robot Pepper en la misma carpeta (por eje
 Para que el servidor se ejecute automáticamente al iniciar el robot:
 
 1. Edita el archivo de configuración:
-   ```bash
-   nano /home/nao/naoqi/preferences/autoload.ini
-   ```
+
+    ```bash
+    nano /home/nao/naoqi/preferences/autoload.ini
+    ```
 
 2. Añade la ruta completa al script `server.py`:
-   ```ini
-   [python]
-   /home/nao/scripts/server.py
-   ```
+
+    ```ini
+    [python]
+    /home/nao/scripts/server.py
+    ```
 
 3. Reinicia el robot Pepper
 
@@ -57,9 +59,24 @@ El script `ai_pepper_script.py` realiza las siguientes acciones:
 
 Asegúrate de que:
 
-- ✅ El robot Pepper esté conectado a la red
-- ✅ El servidor de IA esté accesible
+-   ✅ El robot Pepper esté conectado a la red
+-   ✅ El servidor de IA esté accesible
 
 ---
 
 💡 **Nota**: Este es el componente que se ejecuta en el robot Pepper. Para el servidor de IA y la configuración completa del proyecto, consulta el README principal.
+
+## Errores
+
+El principal error que existe ahora mismo es que al ejecutar el script `choice_script.py` (ya sea de forma individual o desde otro script) pepper deja de reconocer los comandos de voz, es decir, normalmente si le dices 'Hola pepper' o 'enciende la pantalla' te responde o muestra un web en la tablet pero en este estado simplemente reconoce los comandos, se pone los ojos en verde, pero no reacciona en absoluto.
+
+Si el robot acaba en este estado la forma de que vuelva a funcionar correctamente es desde la página web seleccionando el idioma español de nuevo.
+![Web del robot](imagen1.png)
+
+Según lo que he podido ver el error se origina en las lineas de codigo 122-123 de `choice_script.py` pero estas lineas son **necesarias** ya que sin ellas a partir de la segunda ejecución el script da el error `A grammar named "modifiable_grammar" already exists.`.
+
+```
+# Al cambiar el idioma, se reinicia el vocabulario por defecto.
+self.asr.setLanguage("English")
+self.asr.setLanguage("Spanish")
+```
