@@ -80,3 +80,5 @@ Según lo que he podido ver el error se origina en las lineas de codigo 122-123 
 self.asr.setLanguage("English")
 self.asr.setLanguage("Spanish")
 ```
+
+Dejo por [aqui](https://stackoverflow.com/q/79713027) la pregunta de stackoverflow que hice para solucionar el error del vocabulario.
