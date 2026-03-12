@@ -94,19 +94,29 @@ def mandarArchivo(archivo, ip):
     
     # Comando SCP
     cmd = [
-        'scp', 
+        'scp', '-P', '8080',
         '-o', 'StrictHostKeyChecking=no',  # Evitar verificación de host
+        '-o', 'BatchMode=yes',              # No pedir contraseña interactiva
         archivo,
-        '{}@{}:/home/pepper/pepper-chatbot/servergpu'.format(user, ip)
+        '{}@{}:/home/pepper/pepper-chatbot/servergpu/'.format(user, ip)
     ]
+    print("Ejecutando comando: {}".format(' '.join(cmd)))
     
     try:
-        # Ejecutar comando SCP
-        result = subprocess.call(cmd)
+        # Ejecutar comando SCP capturando stdout y stderr
+        proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        stdout, stderr = proc.communicate()
+        result = proc.returncode
         if result == 0:
             print("Archivo transferido exitosamente")
+            if stdout:
+                print("Output: {}".format(stdout.strip()))
         else:
-            print("Error en la transferencia")
+            print("Error en la transferencia (código {}):".format(result))
+            if stderr:
+                print("Detalle del error: {}".format(stderr.strip()))
+            if stdout:
+                print("Output: {}".format(stdout.strip()))
     except Exception as e:
         print("Error: {}".format(e))
 

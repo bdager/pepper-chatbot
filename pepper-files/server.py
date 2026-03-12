@@ -43,7 +43,11 @@ class RequestHandler(BaseHTTPRequestHandler):
         if path == '/run-script':
             # Ejecutamos el script externo y capturamos su salida
             try:
-                command = ['python', SCRIPT_PATH, '--serverIP', '172.18.33.110', '--serverPort', '5000']
+                # Fuera de la red de la UA
+                command = ['python', SCRIPT_PATH, '--serverIP', 'jackson.rovit.ua.es', '--serverPort', '5002']
+                # Dentro de la red de la UA (descomentar si se quiere usar fuera de la red de la UA)
+                # command = ['python', SCRIPT_PATH, '--serverIP', '172.18.33.110', '--serverPort', '5000']
+                
 
                 if 'provider' in params:
                     command.append('--provider')
@@ -66,6 +70,8 @@ class RequestHandler(BaseHTTPRequestHandler):
                 content_type = 'text/plain'
 
             # Enviamos la respuesta HTTP
+            if isinstance(body, str):
+                body = body.encode('utf-8')
             self.send_response(status_code)
             self.send_header('Access-Control-Allow-Origin', '*')
             self.send_header('Content-Type', content_type)
@@ -78,7 +84,7 @@ class RequestHandler(BaseHTTPRequestHandler):
             self.send_header('Access-Control-Allow-Origin', '*')
             self.send_header('Content-Type', 'text/plain')
             self.end_headers()
-            self.wfile.write("Not Found: {}".format(path))
+            self.wfile.write("Not Found: {}".format(path).encode('utf-8'))
 
 if __name__ == '__main__':
 
