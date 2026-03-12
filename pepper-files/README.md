@@ -40,9 +40,31 @@ Para que el servidor se ejecute automáticamente al iniciar el robot:
 
 Una vez configurado el autostart, puedes ejecutar `ai_pepper_script.py` desde la interfaz web. (dile a pepper 'enciende la pantalla' mientras tenga los ojos azules para que la muestre)
 
-### Desde la terminal
+### Desde la terminal (Depuración y Ejecución Manual)
 
-Tambien puedes ejecutar el script desde la terminal de pepper añadiendo los argumentos necesarios.
+Para tareas de desarrollo o depuración, es recomendable ejecutar el sistema manualmente. Esto permite visualizar los `prints` del servidor y la salida del script de IA simultáneamente.
+
+1.  **Acceder al robot:**
+    Conéctate vía SSH: `ssh nao@<IP_DEL_ROBOT>` (Contraseña por defecto: `nao`).
+
+2.  **Liberar el puerto:**
+    Si el servidor ya está corriendo por el *autostart*, deberás detenerlo para lanzarlo manualmente:
+    ```bash
+    fuser -k 8080/tcp
+    ```
+
+3.  **Lanzar el Servidor Puente (Terminal 1):**
+    ```bash
+    cd /home/nao/pepper-chatbot/
+    python server.py
+    ```
+    *Mantén esta terminal abierta para monitorizar la comunicación con el servidor GPU.*
+
+4.  **Ejecutar el flujo (Terminal 2):**
+    Abre una nueva conexión SSH y lanza la petición. El uso de comillas es importante para evitar errores con los parámetros de la URL:
+    ```bash
+    curl "http://localhost:8080/run-script?provider=openai"
+    ```
 
 ### Funcionalidad del script
 
