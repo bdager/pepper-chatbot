@@ -32,6 +32,8 @@ Para que el servidor se ejecute automáticamente al iniciar el robot:
     /home/nao/scripts/server.py
     ```
 
+    *Para garantizar la correcta conexión con el servidor, verifica que en los ficheros `server.py, ai_pepper_script.py` tienen definidas tanto la IP como el PORT correctos para el acceso al servidor usado. (`server.py` punto de acceso por http, `ai_pepper_script.py` por ssh para envío del archivo de audio con la pregunta grabada)*
+
 3. Reinicia el robot Pepper
 
 ## 🎯 Uso
