@@ -8,7 +8,7 @@ from .base_provider import BaseProvider
 load_dotenv()
 
 class OpenAIProvider(BaseProvider):
-    def __init__(self, model="gpt-4.1", max_tokens=300, temperature=0, top_p=0.2):
+    def __init__(self, model="gpt-5.1", max_tokens=300, temperature=0, top_p=0.2):
         super().__init__()
         
         self.model = model
