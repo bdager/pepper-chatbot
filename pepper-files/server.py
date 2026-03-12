@@ -4,7 +4,7 @@ from BaseHTTPServer import HTTPServer, BaseHTTPRequestHandler
 import subprocess
 import os
 import urlparse
-import argparse
+#import argparse
 
 """
 Servidor HTTP simple para ejecutar un script de Python en el robot Pepper haciendo una petición GET a un endpoint específico.
@@ -88,11 +88,19 @@ class RequestHandler(BaseHTTPRequestHandler):
 
 if __name__ == '__main__':
 
-    parser = argparse.ArgumentParser(description="Server para ejecutar un script")
-    parser.add_argument("--port", type=int, default=8080, required=False, help="Puerto en el que escuchará el servidor (por defecto: 8080)")
-    parser.add_argument("--IP", type=str, default="0.0.0.0", required=False, help="IP en la que escuchará el servidor (por defecto: 0.0.0.0)")
-    args = parser.parse_args()
+    """
+    He intenado usar argumentos para el servidor pero no funciona correctamente. Si se ejecuto el script 
+    manualmente desde la terminal no hay problema pero si quiero que se ejecute desde el autoload.ini no funciona.
+    """
 
-    httpd = HTTPServer((args.IP, args.port), RequestHandler)
-    print("Servidor escuchando en http://{}:{}".format(args.IP, args.port))
+    #parser = argparse.ArgumentParser(description="Server para ejecutar un script")
+    #parser.add_argument("--port", type=int, default=8080, required=False, help="Puerto en el que escuchará el servidor (por defecto: 8080)")
+    #parser.add_argument("--IP", type=str, default="0.0.0.0", required=False, help="IP en la que escuchará el servidor (por defecto: 0.0.0.0)")
+    #args = parser.parse_args()
+
+    #httpd = HTTPServer((args.IP, args.port), RequestHandler)
+    #print("Servidor escuchando en http://{}:{}".format(args.IP, args.port))
+    
+    httpd = HTTPServer(('0.0.0.0', 8080), RequestHandler)
+    print("Servidor escuchando en http://localhost:8080")
     httpd.serve_forever()
