@@ -2,7 +2,7 @@
 
 - SSH conection:
 ```bash
-ssh nao@192.168.1.82 
+ssh nao@<IP_DEL_ROBOT>
 ```
 - To check the installed apps on Pepper:
 ```bash

@@ -2,7 +2,7 @@
 
 ![Pepper robot](assets/pepper_2.png?raw=true)
 
-This project enables natural language interaction with a **Pepper robot** using language models such as GPT or LLaMA. The chatbot pipeline supports speech recognition, question answering, and text-to-speech, and can run using the PC microphone or Pepper’s built-in microphone.
+This project enables natural language interaction with a **Pepper robot** using language models such as GPT, GEmini, LLaMA, etc. The chatbot pipeline supports speech recognition, question answering, and text-to-speech, and can run using the PC microphone or Pepper’s built-in microphone.
 
 
 ## Installation
@@ -102,8 +102,15 @@ Please enter the desired language code (example 'es' for Spanish, 'en' for Engli
 
 ## Extras
 
- 🎙️ benedetti.py: Reciting Poetry with Pepper
- 
+The repository is organized into different modules depending on where the code is executed:
 
-The benedetti.py script allows you to interact with the Pepper robot by voice and have it recite poems by Mario Benedetti using expressive speech and gestures. ([README_benedetti](README_benedetti.md))
+### 🎙️ Poetry with Pepper (`benedetti.py`)
+This script allows Pepper to recite poems by **Mario Benedetti** using expressive speech and synchronized gestures. It's a great example of how to use Pepper's animation library combined with voice interaction. ([See README_benedetti.md](README_benedetti.md))
+
+### 🤖 Robot-Side Scripts (`pepper-files/`)
+Contains the lightweight Python 2.7 scripts that must be uploaded and executed directly on the **Pepper Robot**. This includes the bridge server that listens for commands from the web interface or external triggers. ([See pepper-files/README.md](pepper-files/README.md))
+
+### 🖥️ AI Dedicated Server (`servergpu/`)
+This folder contains the **Flask-based API** designed to run on a powerful external machine (GPU-enabled). It handles the heavy lifting: Speech-to-Text, LLM processing (GPT, Gemini, etc.), and response generation. ([See servergpu/README.md](servergpu/README.md))
+
 
